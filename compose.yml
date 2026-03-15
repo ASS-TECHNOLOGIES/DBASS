@@ -8,10 +8,8 @@ services:
     environment:
       MYSQL_ROOT_PASSWORD: password
       MYSQL_DATABASE: StudyAssDB
-      MYSQL_USER: appuser
-      MYSQL_PASSWORD: Chocostrawberry1
     ports:
-      - "3306:3306"
+      - "4306:3306"
     volumes:
       - mysql_data:/var/lib/mysql
 
