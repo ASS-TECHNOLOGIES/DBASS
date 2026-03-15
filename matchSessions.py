@@ -3,8 +3,9 @@ from collections import defaultdict
 
 dataBase = mysql.connector.connect(
     host="localhost",
+    port=4306,
     user="root",
-    passwd="Chocostrawberry1",
+    passwd="password",
     database="StudyAssDB"
 )
 

@@ -2,8 +2,9 @@ import mysql.connector
 
 dataBase = mysql.connector.connect(
     host="localhost",
+    port=4306,
     user="root",
-    passwd="Chocostrawberry1",
+    passwd="password",
     database="StudyAssDB"
 )
 
@@ -66,5 +67,112 @@ cursorObject.execute(registration)
 cursorObject.execute(attendance)
 
 print("Tables created successfully")
+
+# Clear existing data
+cursorObject.execute("DELETE FROM Attendance")
+cursorObject.execute("DELETE FROM Registration")
+cursorObject.execute("DELETE FROM Student")
+
+cursorObject.execute("ALTER TABLE Attendance AUTO_INCREMENT = 1")
+cursorObject.execute("ALTER TABLE Registration AUTO_INCREMENT = 1")
+
+# Insert Students
+studentData = [
+    (
+        "sarah@lancashire.ac.uk", "Sarah", "password123", "Software Engineering",
+        "2026-03-20 14:00:00", "2026-03-22 11:00:00", "2026-03-24 15:00:00",
+        "CSC101", "CSC202", None, None, None, None,
+        "mia@lancashire.ac.uk", None, None
+    ),
+    (
+        "mia@lancashire.ac.uk", "Mia", "password123", "Software Engineering",
+        "2026-03-20 14:00:00", "2026-03-23 09:00:00", "2026-03-25 13:00:00",
+        "CSC101", "CSC202", None, None, None, None,
+        "sarah@lancashire.ac.uk", None, None
+    ),
+    (
+        "adam@lancashire.ac.uk", "Adam", "password123", "Computer Science",
+        "2026-03-20 14:00:00", "2026-03-22 14:00:00", None,
+        "CSC101", None, None, None, None, None,
+        None, None, None
+    ),
+    (
+        "zara@lancashire.ac.uk", "Zara", "password123", "Computer Science",
+        "2026-03-21 10:00:00", "2026-03-24 10:00:00", "2026-03-26 16:00:00",
+        "CSC202", None, None, None, None, None,
+        "noah@lancashire.ac.uk", None, None
+    ),
+    (
+        "noah@lancashire.ac.uk", "Noah", "password123", "Software Engineering",
+        "2026-03-21 10:00:00", "2026-03-23 12:00:00", None,
+        "CSC202", None, None, None, None, None,
+        "zara@lancashire.ac.uk", None, None
+    )
+]
+
+studentInsert = """
+INSERT INTO Student (
+    EMAIL, NAME, PASSWORD, COURSE,
+    AVAILABILITY1, AVAILABILITY2, AVAILABILITY3,
+    MODULE1, MODULE2, MODULE3, MODULE4, MODULE5, MODULE6,
+    FRIENDS1, FRIENDS2, FRIENDS3
+) VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)
+"""
+
+cursorObject.executemany(studentInsert, studentData)
+
+# Insert Registrations
+registrationData = [
+    ("sarah@lancashire.ac.uk", "CSC101"),
+    ("mia@lancashire.ac.uk", "CSC101"),
+    ("adam@lancashire.ac.uk", "CSC101"),
+    ("zara@lancashire.ac.uk", "CSC202"),
+    ("noah@lancashire.ac.uk", "CSC202")
+]
+
+registrationInsert = """
+INSERT INTO Registration (EMAIL, MODULE)
+VALUES (%s, %s)
+"""
+
+cursorObject.executemany(registrationInsert, registrationData)
+
+dataBase.commit()
+
+print("Tables created and dummy students + registrations inserted (Attendance empty).")
+
+alexStudent = (
+    "atdenton@lancashire.ac.uk",
+    "Alex",
+    "password123",
+    "Software Engineering",
+    "2026-03-20 14:00:00",
+    "2026-03-22 11:00:00",
+    "2026-03-24 15:00:00",
+    "CSC101",
+    "CSC202",
+    None,
+    None,
+    None,
+    None,
+    "sarah@lancashire.ac.uk",
+    None,
+    None
+)
+
+studentInsert = """
+INSERT INTO Student (
+    EMAIL, NAME, PASSWORD, COURSE,
+    AVAILABILITY1, AVAILABILITY2, AVAILABILITY3,
+    MODULE1, MODULE2, MODULE3, MODULE4, MODULE5, MODULE6,
+    FRIENDS1, FRIENDS2, FRIENDS3
+) VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)
+"""
+
+cursorObject.execute(studentInsert, alexStudent)
+
+dataBase.commit()
+
+print("Added atdenton@lancashire.ac.uk to student table.")
 
 dataBase.close()
